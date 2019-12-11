@@ -1,0 +1,87 @@
+README
+========================================================================================================================================================================================
+Tyler Benson
+
+An analysis of crime in Los Angeles from 2013 to 2017
+Dataset procured through Kaggle https://www.kaggle.com/cityofLA/crime-in-los-angeles
+=========================================================================================================================================================================================
+Chi2/Chi Squared
+
+    In order to run this code, simply load into your favorite ide and click run. 
+
+    The first section of the code uses pandas in order to separate columns of the dataset into the types of crimes, which
+    are violent, non violent, traffic, child crimes, sexual crimes, and types of theft. The demographics are then separated
+    into their own dataframes, which are sex, race, and age group.
+
+    After this, I compute the cross tabs of each of the 18 relations, sex against violent crime, race against violent crime,
+    sex against non violent crime, etc, etc...
+
+    Then I use scipy to compute the chi2 values as well as the p values and expected values from the method called chi2contingency. 
+    
+    After this is where it gets hard to read, but basically each giant block prints out the results for sex, race, and age
+    group. The results printed are the cross tabs themselves, then the chi2 contingency values which list the chi2 value,
+    p value, degrees of freedom, and a array of expected values.
+    
+    Using the observed and expected arrays, I passed those into a function that computed the (Observed values - Expected values)^2
+    and transforms this 2d array into a heat map. I had to do a a lot of manual editing for the heat map to work, which is
+    why I modified some of the dataframes as well as modify the row nums and col nums constantly.
+    
+    If you want to see all the heat maps you must first close the one your looking at to see the next. Thankfully the console
+    output will stop at whatever values you calculated for the heat map, so you can look at the output while you check the
+    heat map before moving on to the next categories.
+
+=======================================================================================================================================================================
+Clustering
+
+	Before plotting the clusters, I had to set a variable that reads the entire dataset with delimiter ','. I then needed
+	three variables that read the location, crime type code, and area id. Plotting the clusters for each type of crime
+	required a unique array that stores latitude and longitude.
+
+	The for loop then processes and extracts latitude and longitude from parentheses, then I ignored the meaningless
+	coords and the correct coords were stored to correct array.
+
+	Next step was to pass the desired array to 'process_latitude_longitude' function which writes all the coords to a
+	new csv file. The new csv is read to get latitude and longitude separately.
+
+	The next step was to choose k numbers of centroids randomly, then zip them up for future plotting. This needed two
+	new arrays for old centroid and clusters to calculate the initial distance between new centroid and old centroid.
+
+	The centroids are then assigned by by calculating the mean of centroid and the points until the distance between new
+	centroid and old centroid is zero. This makes it possible possible to plot the cluster then plot the correct centroids
+	afterwards.
+
+	For all areas plotted, the procedure will be similar as above, except that you have to store the location to 21
+	different arrays and plot each area manually.
+=======================================================================================================================================================================
+Danger Level
+
+    This part was difficult for me and the code is UGLY. The workflow has too many steps and this should be pipelined so
+    that so many py files are not needed, or at least not required to run manually...
+
+	There are several scripts and csv files that need explanation. All python files are commented within instead of here
+	due to brevity.
+
+	python scripts:
+	*clean_data_models.py - This adds severity, classifies type of crime, and classifies age group.
+	*danger_models.py - This finds the dangers for all 21 areas given severities
+	*get_model_split.py - This divides the training data into two sets to test modeling
+	*get_split_differences.py - Finds the sum of the differences between the dangers for each area in both training sets
+	*get_training_testing.py - This divides the master data into 20% training and 80% testing
+	*normalize_results.py - This normalizes the danger values for the final training/testing comparision
+	*regression_models.py - This uses linear regression to find new, more appropriate values for the severities
+
+	cvs files:
+	*training_model_x.csv - Holds initial values needed to find danger for current model
+	*model_coefs.csv - Holds the data from several models. Calculated severity coefs, the inital coefs and the sum of the differences.
+	*dangers_splits_model_x.csv - Holds the calculated dangers for both sets of training data, the difference between each area, and the sum of the differences for that model
+
+	Note: Other csv files exist that were used for testing functionality. These can be ignored.
+
+	Note: I did not include a massive amount of work in this source code. I initially used R (because I thought it was
+	      better for "Data Science") to code and used an inferior method to model the severities. I simply made models
+	      over and over, adjusting the inputted severities each time, and gradually moved closer to a reasonable model.
+	      It didn't work well. Because this model was not very accurate, I have not included any of that work.
+=======================================================================================================================================================================
+
+
+
